@@ -12,6 +12,7 @@ const statusConfig: Record<ProcessingStatus, { label: string; variant: 'default'
 
 export function CandidaturaCard({ candidatura }: { candidatura: Candidatura }) {
   const status = statusConfig[candidatura.status]
+  const isProcessing = candidatura.status === 'PROCESSING'
 
   return (
     <Link href={`/candidaturas/${candidatura.id}`}>
@@ -21,9 +22,12 @@ export function CandidaturaCard({ candidatura }: { candidatura: Candidatura }) {
             <p className="font-medium text-gray-900 truncate">{candidatura.empresa}</p>
             <p className="text-sm text-gray-500 truncate mt-0.5">{candidatura.cargo}</p>
           </div>
-          <Badge variant={status.variant} className="ml-4 shrink-0">
-            {status.label}
-          </Badge>
+          <div className="flex items-center gap-2 ml-4 shrink-0">
+            {isProcessing && (
+              <span className="inline-block w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            )}
+            <Badge variant={status.variant}>{status.label}</Badge>
+          </div>
         </CardContent>
       </Card>
     </Link>

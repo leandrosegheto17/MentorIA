@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCandidatura } from '@/server/services/candidatura'
 import { DeleteCandidaturaButton } from '@/components/candidatura/DeleteCandidaturaButton'
 import { ProcessarButton } from '@/components/candidatura/ProcessarButton'
+import { PollingRefresher } from '@/components/shared/PollingRefresher'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -42,6 +43,7 @@ export default async function CandidaturaPage({ params }: { params: Promise<{ id
 
   return (
     <div>
+      <PollingRefresher active={candidatura.status === 'PROCESSING'} intervalMs={4000} />
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>

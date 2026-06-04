@@ -1,9 +1,7 @@
 'use client'
 
-import { useTransition, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { processarCandidatura } from '@/server/actions/processamento'
 import type { ProcessingStatus } from '@/types/candidatura'
 
 interface ProcessarButtonProps {
@@ -11,26 +9,51 @@ interface ProcessarButtonProps {
   status: ProcessingStatus
 }
 
-export function ProcessarButton({ id, status }: ProcessarButtonProps) {
-  const [isPending, startTransition] = useTransition()
-  const [avisos, setAvisos] = useState<string[]>([])
-  const router = useRouter()
+export function ProcessarButton({ id, status: initialStatus }: ProcessarButtonProps) {
+  const [localStatus, setLocalStatus] = useState<ProcessingStatus>(initialStatus)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  function handleProcessar() {
-    setAvisos([])
-    startTransition(async () => {
-      const result = await processarCandidatura(id)
-      if (result?.avisos) setAvisos(result.avisos)
-      router.refresh()
-    })
+  const isProcessing = localStatus === 'PROCESSING' || loading
+
+  async function handleProcessar() {
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch(`/api/candidaturas/${id}/processar`, { method: 'POST' })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error ?? 'Erro ao iniciar processamento.')
+        setLoading(false)
+        return
+      }
+      setLocalStatus('PROCESSING')
+    } catch {
+      setError('Não foi possível conectar ao servidor.')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const isProcessing = status === 'PROCESSING' || isPending
+  if (isProcessing) {
+    return (
+      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="inline-block w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-blue-800 font-medium">Processando em background...</p>
+        </div>
+        <p className="text-xs text-blue-600">
+          A página atualiza automaticamente quando o material estiver pronto.
+        </p>
+      </div>
+    )
+  }
 
-  if (status === 'COMPLETED' && !isPending) {
+  if (localStatus === 'COMPLETED') {
     return (
       <div className="mt-6 space-y-2">
-        <Button variant="outline" size="sm" onClick={handleProcessar} disabled={isPending}>
+        <Button variant="outline" size="sm" onClick={handleProcessar} disabled={loading}>
           Reprocessar dados
         </Button>
         <p className="text-xs text-gray-400">Útil se a vaga foi atualizada ou você adicionou currículo.</p>
@@ -41,27 +64,15 @@ export function ProcessarButton({ id, status }: ProcessarButtonProps) {
   return (
     <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100 space-y-3">
       <div>
-        <p className="text-sm text-blue-800 font-medium">
-          {isProcessing ? 'Coletando e processando dados...' : 'Pronto para processar'}
-        </p>
+        <p className="text-sm text-blue-800 font-medium">Pronto para processar</p>
         <p className="text-xs text-blue-600 mt-0.5">
-          {isProcessing
-            ? 'Isso pode levar até 30 segundos.'
-            : 'Clique para coletar dados da vaga, empresa e currículo.'}
+          Clique para coletar dados da vaga, empresa e currículo em background.
         </p>
       </div>
-
-      {avisos.length > 0 && (
-        <ul className="text-xs text-amber-700 bg-amber-50 p-2 rounded space-y-1">
-          {avisos.map((a, i) => <li key={i}>⚠ {a}</li>)}
-        </ul>
-      )}
-
-      {status !== 'PROCESSING' && (
-        <Button size="sm" onClick={handleProcessar} disabled={isProcessing}>
-          {isProcessing ? 'Processando...' : status === 'ERROR' ? 'Tentar novamente' : 'Iniciar Processamento'}
-        </Button>
-      )}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+      <Button size="sm" onClick={handleProcessar} disabled={loading}>
+        {localStatus === 'ERROR' ? 'Tentar novamente' : 'Iniciar Processamento'}
+      </Button>
     </div>
   )
 }

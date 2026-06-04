@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { listCandidaturas } from '@/server/services/candidatura'
 import { CandidaturaCard } from '@/components/candidatura/CandidaturaCard'
+import { PollingRefresher } from '@/components/shared/PollingRefresher'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -13,9 +14,11 @@ export default async function CandidaturasPage() {
   if (!user) redirect('/login')
 
   const candidaturas = await listCandidaturas(user.id)
+  const hasProcessing = candidaturas.some((c) => c.status === 'PROCESSING')
 
   return (
     <div>
+      <PollingRefresher active={hasProcessing} />
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Minhas Candidaturas</h1>
