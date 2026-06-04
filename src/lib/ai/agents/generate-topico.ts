@@ -1,4 +1,4 @@
-import { anthropic, AI_MODEL, AI_MAX_TOKENS } from '@/lib/ai/client'
+import { generateText } from '@/lib/ai/generate'
 import { buildSystemPrompt, type GenerationSources } from '@/lib/ai/prompts/system'
 import { buildEmpresaPrompt } from '@/lib/ai/prompts/empresa'
 import { buildVagaPrompt } from '@/lib/ai/prompts/vaga'
@@ -29,24 +29,10 @@ export async function generateTopico(
   tipo: TopicoTipo,
   sources: GenerationSources
 ): Promise<TopicoGerado> {
-  const systemText = buildSystemPrompt(sources)
-  const userPrompt = getUserPrompt(tipo, sources)
-
-  const response = await anthropic.messages.create({
-    model: AI_MODEL,
-    max_tokens: AI_MAX_TOKENS,
-    system: [
-      {
-        type: 'text',
-        text: systemText,
-        cache_control: { type: 'ephemeral' },
-      },
-    ],
-    messages: [{ role: 'user', content: userPrompt }],
+  const conteudo = await generateText({
+    system: buildSystemPrompt(sources),
+    user: getUserPrompt(tipo, sources),
   })
 
-  const block = response.content[0]
-  if (block.type !== 'text') throw new Error('unexpected_response_type')
-
-  return { tipo, titulo: TITULOS[tipo], conteudo: block.text }
+  return { tipo, titulo: TITULOS[tipo], conteudo }
 }
