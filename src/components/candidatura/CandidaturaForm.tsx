@@ -13,6 +13,7 @@ interface DefaultValues {
   cargo?: string | null
   linkVaga?: string | null
   linkedinText?: string | null
+  curriculoPath?: string | null
 }
 
 interface CandidaturaFormProps {
@@ -92,6 +93,22 @@ export function CandidaturaForm({ action, defaultValues, submitLabel = 'Salvar' 
           No LinkedIn: perfil → Mais → Salvar como PDF → cole o texto aqui.
           Isso permite personalizar as perguntas ao seu perfil.
         </p>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="curriculo">
+          Currículo PDF <span className="text-gray-400 font-normal">(opcional, máx. 10 MB)</span>
+        </Label>
+        <Input
+          id="curriculo"
+          name="curriculo"
+          type="file"
+          accept="application/pdf"
+          className="cursor-pointer"
+        />
+        {defaultValues?.curriculoPath && (
+          <p className="text-xs text-green-600">✓ Currículo já enviado. Selecione um novo para substituir.</p>
+        )}
       </div>
 
       <div className="flex gap-3 pt-1">

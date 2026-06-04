@@ -16,8 +16,11 @@ model Candidatura {
   cargo         String
   linkVaga      String?
   curriculoPath String?
-  linkedinText  String?            @db.Text
-  status        ProcessingStatus   @default(PENDING)
+  linkedinText   String?            @db.Text
+  vagaTexto      String?            @db.Text
+  empresaTexto   String?            @db.Text
+  curriculoTexto String?            @db.Text
+  status         ProcessingStatus   @default(PENDING)
   topicos       TopicoPreparacao[]
   faqItems      FaqItem[]
   createdAt     DateTime           @default(now())

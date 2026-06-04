@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getCandidatura } from '@/server/services/candidatura'
 import { DeleteCandidaturaButton } from '@/components/candidatura/DeleteCandidaturaButton'
+import { ProcessarButton } from '@/components/candidatura/ProcessarButton'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -120,14 +121,7 @@ export default async function CandidaturaPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Botão de processamento */}
-      {candidatura.status === 'PENDING' && (
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-          <p className="text-sm text-blue-800 font-medium mb-1">Material ainda não gerado</p>
-          <p className="text-xs text-blue-600">
-            A geração automática de material via IA será implementada na próxima etapa.
-          </p>
-        </div>
-      )}
+      <ProcessarButton id={id} status={candidatura.status} />
     </div>
   )
 }

@@ -15,7 +15,7 @@ export function getCandidatura(id: string, userId: string) {
   })
 }
 
-export function createCandidatura(userId: string, data: CreateCandidaturaInput) {
+export function createCandidatura(userId: string, data: CreateCandidaturaInput & { curriculoPath?: string }) {
   return prisma.candidatura.create({
     data: { ...data, userId },
   })

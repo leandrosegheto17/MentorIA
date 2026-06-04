@@ -11,7 +11,10 @@ export async function getCandidatura(id: string, userId: string) {
   return candidatura
 }
 
-export function createCandidatura(userId: string, data: CreateCandidaturaInput) {
+export function createCandidatura(
+  userId: string,
+  data: CreateCandidaturaInput & { curriculoPath?: string }
+) {
   return repo.createCandidatura(userId, data)
 }
 
