@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Candidatura ─────────────────────────────────────────────────────────────
+
+model Candidatura {
+  id            String             @id @default(cuid())
+  userId        String
+  empresa       String
+  cargo         String
+  linkVaga      String?
+  curriculoPath String?
+  linkedinText  String?            @db.Text
+  status        ProcessingStatus   @default(PENDING)
+  topicos       TopicoPreparacao[]
+  faqItems      FaqItem[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([userId])
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  ERROR
+}
+
+// ─── Tópicos de Preparação ───────────────────────────────────────────────────
+
+model TopicoPreparacao {
+  id            String      @id @default(cuid())
+  candidaturaId String
+  candidatura   Candidatura @relation(fields: [candidaturaId], references: [id], onDelete: Cascade)
+  tipo          TopicoTipo
+  titulo        String
+  conteudo      String      @db.Text
+  fontesUsadas  String[]
+  avisos        String[]
+  geradoEm      DateTime    @default(now())
+
+  @@unique([candidaturaId, tipo])
+  @@index([candidaturaId])
+}
+
+enum TopicoTipo {
+  EMPRESA
+  VAGA
+  PERGUNTAS
+}
+
+// ─── FAQ ─────────────────────────────────────────────────────────────────────
+
+model FaqItem {
+  id            String       @id @default(cuid())
+  candidaturaId String
+  candidatura   Candidatura  @relation(fields: [candidaturaId], references: [id], onDelete: Cascade)
+  pergunta      String
+  resposta      String       @db.Text
+  categoria     FaqCategoria
+  createdAt     DateTime     @default(now())
+
+  @@index([candidaturaId])
+}
+
+enum FaqCategoria {
+  EMPRESA
+  VAGA
+  COMPORTAMENTAL
+}
+
+// ─── LGPD ────────────────────────────────────────────────────────────────────
+
+model ConsentimentoLGPD {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  aceitoEm         DateTime @default(now())
+  versaoPrivacidade String
+  ipAddress        String?
+}

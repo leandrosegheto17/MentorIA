@@ -1,0 +1,55 @@
+Visão geral
+O produto é um assistente de preparação para processos seletivos. O candidato cadastra uma candidatura (empresa, cargo, link da vaga e, opcionalmente, currículo em PDF e LinkedIn), e o app reúne informações públicas para entregar três blocos de preparação: contexto sobre a empresa, contexto sobre a vaga e um material de perguntas e respostas, complementado por um FAQ e um simulado de entrevista.
+A proposta de valor é centralizar e acelerar a preparação que hoje o candidato faz manualmente e de forma dispersa (pesquisar a empresa, reler a vaga, tentar adivinhar perguntas). O diferencial está em cruzar o perfil do candidato (currículo/LinkedIn) com a vaga específica, gerando preparação personalizada em vez de genérica.
+Personas
+A persona central é o candidato em busca de recolocação ou primeira vaga, com graus variados de senioridade e familiaridade com processos seletivos. Vale considerar dois extremos: o candidato júnior, que precisa de orientação básica e ganho de confiança, e o sênior, que quer eficiência e profundidade (ex.: alinhar narrativa de carreira à cultura da empresa). Esses dois perfis influenciam tom, nível de detalhe e tipos de pergunta no simulado.
+Fluxo principal
+O caminho feliz é: o candidato cria uma candidatura → informa os dados → o sistema coleta e processa as fontes → gera os três tópicos → o candidato consome FAQ e faz o simulado → revisa o desempenho → ajusta a preparação. Idealmente o candidato gerencia múltiplas candidaturas em paralelo, já que normalmente se aplica para várias vagas ao mesmo tempo.
+Requisitos funcionais
+Cadastro de candidatura
+
+Permitir criar, editar, listar e excluir candidaturas.
+Campos obrigatórios: nome da empresa e nome do cargo. Campos opcionais: link da vaga, upload de currículo em PDF, link do LinkedIn.
+Validar formato e acessibilidade dos links informados, e formato/tamanho do PDF.
+
+Coleta e processamento de dados
+
+Extrair o conteúdo textual da descrição da vaga a partir do link informado.
+Extrair texto e estrutura do currículo em PDF (experiências, formação, habilidades, palavras-chave).
+Obter informações públicas sobre a empresa (área de atuação, porte, cultura, notícias recentes, presença online).
+Consolidar o perfil do candidato a partir do currículo e do LinkedIn, quando disponíveis.
+
+Geração dos três tópicos
+
+Conhecer a empresa: resumo do negócio, valores/cultura, produtos, contexto de mercado e pontos que costumam aparecer em entrevistas.
+Conhecer a vaga: responsabilidades, requisitos técnicos e comportamentais, e — quando houver currículo — uma análise de aderência destacando pontos fortes do candidato e lacunas a preparar.
+Perguntas e respostas: perguntas prováveis (técnicas, comportamentais e situacionais) com orientações de resposta personalizadas ao perfil.
+
+FAQ
+
+Gerar um conjunto de perguntas frequentes do processo seletivo com respostas sugeridas, navegável e idealmente filtrável por categoria (empresa, vaga, comportamental).
+
+Simulado
+
+Apresentar perguntas de forma interativa, coletar as respostas do candidato (texto e, possivelmente, áudio) e devolver feedback estruturado (clareza, aderência à vaga, sugestões de melhoria).
+Registrar histórico de tentativas para acompanhar evolução.
+
+Gestão e saída
+
+Salvar o material gerado por candidatura para consulta posterior.
+Permitir reprocessar/atualizar quando o candidato editar dados ou a vaga mudar.
+Exportar a preparação (ex.: PDF) para estudo offline.
+
+Requisitos não funcionais
+Privacidade e conformidade (crítico). Currículo e LinkedIn são dados pessoais sob a LGPD. O app precisa de base legal clara (consentimento), política de privacidade, finalidade explícita, e mecanismos de exclusão dos dados. Currículos devem ser armazenados de forma protegida e idealmente com retenção limitada.
+Segurança. Criptografia em trânsito e em repouso, controle de acesso por usuário, isolamento dos dados entre candidatos e tratamento seguro do upload de PDFs (validação contra arquivos maliciosos).
+Confiabilidade da informação gerada. Como o app afirma fatos sobre empresas e vagas, há risco de a IA "inventar" informação. É requisito que as afirmações sejam ancoradas em fontes reais coletadas, com transparência sobre origem e um aviso quando não houver dado suficiente, em vez de preencher lacunas com suposições.
+Desempenho. A coleta e geração envolvem chamadas externas e processamento de IA, que são lentos. O sistema deve dar feedback de progresso e, de preferência, processar de forma assíncrona em vez de travar a interface.
+Usabilidade e acessibilidade. Interface simples para quem está sob estresse de busca de emprego; suporte a português; aderência a boas práticas de acessibilidade.
+Escalabilidade e custo. Cada candidatura consome chamadas de IA e de coleta, que têm custo por uso. A arquitetura deve permitir cache e controle de custo (ex.: limites por usuário) para escalar de forma sustentável.
+Disponibilidade e observabilidade. Metas de uptime, logs e monitoramento, com tratamento gracioso de falhas das fontes externas (ex.: link da vaga fora do ar).
+Pontos de atenção e decisões em aberto
+Dois pontos merecem destaque por afetarem arquitetura e viabilidade:
+A coleta do LinkedIn é juridicamente sensível — os termos de uso do LinkedIn restringem scraping, e isso pode inviabilizar a extração automática. Uma alternativa é pedir que o candidato exporte/cole o próprio perfil, o que mantém o dado, respeita os termos e ainda reforça que o dado é fornecido pelo titular.
+Da mesma forma, vale definir como tratar links de vagas que exigem login ou bloqueiam acesso automatizado.
+Para fecharmos a base do PRD, sugiro decidir: plataforma (web, mobile ou ambos), se haverá contas de usuário e múltiplas candidaturas desde a v1, qual o escopo mínimo do MVP (talvez os três tópicos + FAQ, deixando o simulado para a v2), e o modelo de monetização (que influencia limites de uso e custo de IA).
