@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+
 type Action = (formData: FormData) => Promise<{ error: string } | void>
 
 interface DefaultValues {
   empresa?: string | null
   cargo?: string | null
   linkVaga?: string | null
-  linkedinText?: string | null
   curriculoPath?: string | null
 }
 
@@ -78,21 +77,6 @@ export function CandidaturaForm({ action, defaultValues, submitLabel = 'Salvar' 
           defaultValue={defaultValues?.linkVaga ?? ''}
         />
         <p className="text-xs text-gray-400">Usado para extrair a descrição da vaga automaticamente</p>
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="linkedinText">Perfil LinkedIn <span className="text-gray-400 font-normal">(opcional)</span></Label>
-        <Textarea
-          id="linkedinText"
-          name="linkedinText"
-          placeholder="Cole aqui o texto exportado do seu perfil LinkedIn..."
-          rows={5}
-          defaultValue={defaultValues?.linkedinText ?? ''}
-        />
-        <p className="text-xs text-gray-400">
-          No LinkedIn: perfil → Mais → Salvar como PDF → cole o texto aqui.
-          Isso permite personalizar as perguntas ao seu perfil.
-        </p>
       </div>
 
       <div className="space-y-1.5">

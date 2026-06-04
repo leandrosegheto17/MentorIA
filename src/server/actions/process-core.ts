@@ -49,7 +49,6 @@ export async function processarCore(id: string, userId: string): Promise<{ aviso
     vagaTexto: updates.vagaTexto ?? candidatura.vagaTexto,
     empresaTexto: updates.empresaTexto ?? candidatura.empresaTexto,
     curriculoTexto: updates.curriculoTexto ?? candidatura.curriculoTexto,
-    linkedinText: candidatura.linkedinText,
   }
 
   try {

@@ -1,7 +1,7 @@
 import type { GenerationSources } from './system'
 
 export function buildVagaPrompt(sources: GenerationSources): string {
-  const temPerfil = !!(sources.curriculoTexto || sources.linkedinText)
+  const temPerfil = !!sources.curriculoTexto
 
   return `Gere o tópico **"Conhecer a Vaga"** para a preparação da entrevista para ${sources.cargo}.
 

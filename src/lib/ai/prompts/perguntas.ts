@@ -1,7 +1,7 @@
 import type { GenerationSources } from './system'
 
 export function buildPerguntasPrompt(sources: GenerationSources): string {
-  const temPerfil = !!(sources.curriculoTexto || sources.linkedinText)
+  const temPerfil = !!sources.curriculoTexto
 
   return `Gere o tópico **"Perguntas & Respostas"** para a preparação da entrevista de ${sources.cargo}.
 

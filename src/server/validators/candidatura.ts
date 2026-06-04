@@ -7,10 +7,6 @@ export const createCandidaturaSchema = z.object({
     (val) => (val === '' ? undefined : val),
     z.string().url('Informe uma URL válida (ex: https://...)').optional()
   ),
-  linkedinText: z.preprocess(
-    (val) => (val === '' ? undefined : val),
-    z.string().max(10000).optional()
-  ),
 })
 
 export const updateCandidaturaSchema = createCandidaturaSchema.partial()

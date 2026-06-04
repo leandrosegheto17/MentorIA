@@ -29,7 +29,6 @@ export async function createCandidatura(formData: FormData) {
     empresa: formData.get('empresa'),
     cargo: formData.get('cargo'),
     linkVaga: formData.get('linkVaga'),
-    linkedinText: formData.get('linkedinText'),
   })
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
@@ -64,7 +63,6 @@ export async function updateCandidatura(id: string, formData: FormData) {
     empresa: formData.get('empresa'),
     cargo: formData.get('cargo'),
     linkVaga: formData.get('linkVaga'),
-    linkedinText: formData.get('linkedinText'),
   })
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }

@@ -11,7 +11,6 @@ export interface GenerationSources {
   vagaTexto?: string | null
   empresaTexto?: string | null
   curriculoTexto?: string | null
-  linkedinText?: string | null
 }
 
 export function buildSystemPrompt(sources: GenerationSources): string {
@@ -36,16 +35,8 @@ export function buildSystemPrompt(sources: GenerationSources): string {
   lines.push(empresaTexto || `⚠️ Dado insuficiente: dados da empresa não foram coletados.`)
 
   const curriculoTexto = truncate(sources.curriculoTexto)
-  const linkedinText = truncate(sources.linkedinText)
-
-  if (curriculoTexto || linkedinText) {
-    lines.push(`\n### Perfil do Candidato`)
-    if (curriculoTexto) lines.push(`**Currículo:**\n${curriculoTexto}`)
-    if (linkedinText) lines.push(`**LinkedIn:**\n${linkedinText}`)
-  } else {
-    lines.push(`\n### Perfil do Candidato`)
-    lines.push(`⚠️ Dado insuficiente: nenhum dado de perfil foi fornecido (currículo ou LinkedIn).`)
-  }
+  lines.push(`\n### Perfil do Candidato (Currículo)`)
+  lines.push(curriculoTexto || `⚠️ Dado insuficiente: nenhum currículo em PDF foi fornecido.`)
 
   lines.push(`\n---`)
   return lines.join('\n')
