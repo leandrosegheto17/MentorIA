@@ -43,7 +43,7 @@ export default async function CandidaturaPage({ params }: { params: Promise<{ id
 
   return (
     <div>
-      <PollingRefresher active={candidatura.status === 'PROCESSING'} intervalMs={4000} />
+      <PollingRefresher active={candidatura.status === 'PROCESSING'} intervalMs={3000} />
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
