@@ -6,6 +6,7 @@ Esta rule é **crítica e inegociável**. Antes de criar qualquer arquivo, consu
 
 | Tipo de arquivo | Pasta obrigatória |
 |---|---|
+| Proxy/Auth guard (ex-middleware) | `src/proxy.ts` — função exportada `proxy` (Next.js 16) |
 | Página Next.js (rota pública) | `src/app/(auth)/[rota]/page.tsx` |
 | Página Next.js (rota protegida) | `src/app/(dashboard)/[feature]/page.tsx` |
 | Layout de grupo de rotas | `src/app/(grupo)/layout.tsx` |
